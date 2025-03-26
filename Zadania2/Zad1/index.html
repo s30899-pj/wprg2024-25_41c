@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator</title>
+</head>
+<body>
+<form action="script.php" method="GET">
+    <label>
+        <label>
+            <input type="number" name="first-number" required>
+        </label>
+        <label>
+            <select name="operations">
+                <option value="+">+</option>
+                <option value="-">-</option>
+                <option value="*">*</option>
+                <option value="/">/</option>
+            </select>
+        </label>
+        <label>
+            <input type="number" name="second-number" required>
+        </label>
+        <input type="submit" value="Oblicz">
+    </label>
+</form>
+</body>
+</html>
