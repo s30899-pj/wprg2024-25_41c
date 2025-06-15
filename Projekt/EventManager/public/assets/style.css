@@ -1,0 +1,395 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f7f7f7;
+    color: #333;
+}
+
+
+.page-wrapper {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.page-title {
+    text-align: center;
+    font-size: 28px;
+    margin: 40px 0 30px;
+    font-weight: bold;
+    color: #333;
+}
+
+main.container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    flex: 1;
+}
+
+
+header {
+    background: #343a40;
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    border-bottom: 4px solid #007bff;
+}
+
+header h1 {
+    margin-bottom: 20px;
+    font-size: 32px;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+nav a:hover {
+    color: #ffc107;
+}
+
+
+.event-box {
+    background: white;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+}
+
+.event-image {
+    width: 100%;
+    max-height: 280px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+.no-events {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #666;
+}
+
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="number"],
+textarea,
+select {
+    padding: 15px 20px;
+    font-size: 16px;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s ease;
+}
+
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+input[type="number"]:focus,
+textarea:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+input[type="submit"],
+button {
+    padding: 14px;
+    font-size: 16px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+input[type="datetime-local"] {
+    padding: 15px 20px;
+    font-size: 16px;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s ease;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+}
+
+input[type="datetime-local"]:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+form label {
+    display: block;
+    text-align: center;
+    font-weight: bold;
+    font-size: 16px;
+    color: #333;
+}
+
+input[type="submit"]:hover,
+button:hover {
+    background: #0056b3;
+}
+
+
+.message {
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 15px 20px;
+    border-radius: 6px;
+    font-size: 1rem;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.message.error {
+    background-color: #f8d7da;
+    color: #842029;
+    border: 1px solid #f5c2c7;
+}
+
+.message.success {
+    background-color: #d1e7dd;
+    color: #0f5132;
+    border: 1px solid #badbcc;
+}
+
+
+footer {
+    background: #343a40;
+    color: white;
+    text-align: center;
+    padding: 15px 0;
+    margin-top: auto;
+}
+
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+table th, table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+table th {
+    background-color: #f1f1f1;
+}
+
+
+a.button {
+    display: inline-block;
+    padding: 10px 15px;
+    background: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background 0.3s;
+}
+
+a.button:hover {
+    background: #0056b3;
+}
+
+a.button.delete {
+    background: #dc3545;
+}
+
+a.button.delete:hover {
+    background: #bd2130;
+}
+
+
+.comment {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.comment .author {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.comment .date {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+
+.attachment {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background: #e9ecef;
+    border-radius: 6px;
+    margin-bottom: 10px;
+}
+
+.attachment a {
+    margin-left: 10px;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.attachment a:hover {
+    text-decoration: underline;
+}
+
+
+.profile-box {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.profile-box p {
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+
+.registration-list {
+    margin-top: 20px;
+}
+
+.registration-item {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+
+.event-closed {
+    display: inline-block;
+    padding: 5px 10px;
+    background: #dc3545;
+    color: white;
+    border-radius: 4px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+
+.file-input-container {
+    position: relative;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.file-button {
+    padding: 12px 20px;
+    background: #007bff;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    text-align: center;
+    transition: background 0.3s;
+    font-weight: normal;
+}
+
+.file-button:hover {
+    background: #0056b3;
+}
+
+.file-input {
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.file-name {
+    display: block;
+    margin-top: 8px;
+    font-size: 0.9rem;
+    color: #666;
+    font-style: italic;
+    text-align: center;
+}
+
+.file-icon {
+    margin-right: 8px;
+}
+
+
+@media (max-width: 768px) {
+    nav ul {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    main.container {
+        padding: 10px;
+    }
+
+    .event-box, .profile-box {
+        padding: 15px;
+    }
+
+    .file-button {
+        padding: 10px 15px;
+        font-size: 14px;
+    }
+}
