@@ -22,10 +22,23 @@ class Auth
         return false;
     }
 
-    public static function logout(): void
+    public static function checkRememberToken(\PDO $pdo): void
     {
-        session_unset();
-        session_destroy();
+        if (!isset($_SESSION['user']) && isset($_COOKIE['remember'])) {
+            $token = $_COOKIE['remember'];
+            $stmt = $pdo->prepare("SELECT * FROM users WHERE remember_token = ? AND remember_token_expires > NOW()");
+            $stmt->execute([$token]);
+            $user = $stmt->fetch();
+
+            if ($user) {
+                $_SESSION['user'] = [
+                    'id' => $user['id'],
+                    'login' => $user['login'],
+                    'email' => $user['email'],
+                    'role' => $user['role']
+                ];
+            }
+        }
     }
 
     public static function requireLogin(): void

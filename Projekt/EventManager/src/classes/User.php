@@ -88,7 +88,11 @@ class User
     {
         $expires = date('Y-m-d H:i:s', time() + 3600);
         $stmt = $pdo->prepare("UPDATE users SET reset_token = :token, reset_token_expires = :expires WHERE id = :id");
-        $stmt->execute(['token' => $token, 'expires' => $expires, 'id' => $id]);
+        $stmt->execute([
+            'token' => $token,
+            'expires' => $expires,
+            'id' => $id
+        ]);
     }
 
     public static function findByResetToken(\PDO $pdo, string $token): ?array

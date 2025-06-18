@@ -2,10 +2,8 @@
 require_once '../src/config.php';
 require_once '../src/db.php';
 require_once '../src/classes/Event.php';
-require_once '../src/classes/User.php';
 
 use classes\Event;
-use classes\User;
 
 session_start();
 
@@ -29,19 +27,12 @@ include 'assets/header.php';
                     <?= htmlspecialchars($event['title'] ?: 'Brak tytułu') ?>
                 </a>
             </h3>
-            <p><?= nl2br(htmlspecialchars($event['description'] ?: 'Brak opisu')) ?></p>
             <p><strong>Miejsce:</strong> <?= htmlspecialchars($event['location'] ?: '-') ?></p>
             <p><strong>Data:</strong>
                 <?php
                 $startDate = (!empty($event['start_date']) && strtotime($event['start_date'])) ? date('d.m.Y H:i', strtotime($event['start_date'])) : '-';
                 $endDate = (!empty($event['end_date']) && strtotime($event['end_date'])) ? date('d.m.Y H:i', strtotime($event['end_date'])) : '-';
                 echo "$startDate – $endDate";
-                ?>
-            </p>
-            <p><strong>Organizator:</strong>
-                <?php
-                $organizer = User::findById($pdo, $event['organizer_id'] ?? null);
-                echo $organizer ? htmlspecialchars($organizer['login']) : '-';
                 ?>
             </p>
             <?php if ($event['is_closed']): ?>

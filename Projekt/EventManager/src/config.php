@@ -6,7 +6,7 @@ define('DB_PASS', 'root');
 
 define('UPLOAD_DIR', __DIR__ . '/../uploads/');
 define('LOG_DIR', __DIR__ . '/../logs/');
-define('BASE_URL', 'http://localhost/EventManager/public/');
+define('BASE_URL', 'http://localhost:8000/');
 
 if (!is_dir(UPLOAD_DIR)) {
     mkdir(UPLOAD_DIR, 0777, true);

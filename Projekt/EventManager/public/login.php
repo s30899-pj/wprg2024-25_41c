@@ -2,10 +2,8 @@
 require_once '../src/config.php';
 require_once '../src/db.php';
 require_once '../src/classes/User.php';
-require_once '../src/classes/Auth.php';
 
 use classes\User;
-use classes\Auth;
 
 session_start();
 
@@ -33,8 +31,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $expiry = time() + 60 * 60 * 24 * 30;
                 setcookie('remember', $rememberToken, $expiry, '/');
 
-                $stmt = $pdo->prepare("INSERT INTO remember_tokens (user_id, token, expires_at) VALUES (?, ?, ?)");
-                $stmt->execute([$user['id'], $rememberToken, date('Y-m-d H:i:s', $expiry)]);
+                $stmt = $pdo->prepare("UPDATE users SET remember_token = ?, remember_token_expires = ? WHERE id = ?");
+                $stmt->execute([$rememberToken, date('Y-m-d H:i:s', $expiry), $user['id']]);
+
+                setcookie('remember', $rememberToken, $expiry, '/');
             }
 
             header('Location: index.php');

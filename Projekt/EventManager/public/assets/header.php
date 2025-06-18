@@ -1,6 +1,11 @@
 <?php
+require_once '../src/classes/Auth.php';
+use classes\Auth;
+
+Auth::checkRememberToken($pdo);
+
 if (session_status() === PHP_SESSION_NONE) session_start();
-$user = $_SESSION['user'] ?? null;
+$currentUser = $_SESSION['user'] ?? null;
 ?>
 <!DOCTYPE html>
 <html lang="pl">
@@ -19,12 +24,12 @@ $user = $_SESSION['user'] ?? null;
                 <li><a href="index.php">Strona główna</a></li>
                 <li><a href="events.php">Wydarzenia</a></li>
 
-                <?php if ($user): ?>
-                    <?php if (in_array($user['role'], ['admin', 'organizer'])): ?>
+                <?php if ($currentUser): ?>
+                    <?php if (in_array($currentUser['role'], ['admin', 'organizer'])): ?>
                         <li><a href="add_event.php">Dodaj wydarzenie</a></li>
                     <?php endif; ?>
 
-                    <?php if ($user['role'] === 'admin'): ?>
+                    <?php if ($currentUser['role'] === 'admin'): ?>
                         <li><a href="admin_panel.php">Panel admina</a></li>
                     <?php endif; ?>
 

@@ -10,6 +10,8 @@ CREATE TABLE users (
                        is_blocked TINYINT(1) NOT NULL DEFAULT 0,
                        reset_token VARCHAR(255),
                        reset_token_expires DATETIME,
+                       remember_token VARCHAR(255) NULL,
+                       remember_token_expires DATETIME NULL,
                        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -43,8 +45,8 @@ CREATE TABLE comments (
                           user_id INT NULL,
                           guest_name VARCHAR(50) NULL,
                           content TEXT,
-                          parent_id INT DEFAULT NULL AFTER id,
-                          is_organizer_reply TINYINT(1) DEFAULT 0 AFTER guest_name,
+                          parent_id INT DEFAULT NULL,
+                          is_organizer_reply TINYINT(1) DEFAULT 0,
                           created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                           FOREIGN KEY (event_id) REFERENCES events(id),
                           FOREIGN KEY (user_id) REFERENCES users(id),

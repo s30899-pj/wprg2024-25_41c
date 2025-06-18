@@ -11,28 +11,30 @@ $error = '';
 $token = $_GET['token'] ?? '';
 
 if (!$token) {
+    $_SESSION['error'] = 'Brak tokenu resetowania!';
     header('Location: login.php');
     exit;
 }
 
-$user = User::findByResetToken($pdo, $token);
+$resetUser = User::findByResetToken($pdo, $token);
 
-if (!$user) {
-    $error = 'Nieprawidłowy lub przedawniony token resetowania!';
-}
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if ($resetUser) {
+        $password = $_POST['password'] ?? '';
+        $confirm = $_POST['confirm_password'] ?? '';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && $user) {
-    $password = $_POST['password'] ?? '';
-    $confirm = $_POST['confirm_password'] ?? '';
+        if ($password === $confirm) {
+            User::updatePassword($pdo, $resetUser['id'], $password);
+            User::clearResetToken($pdo, $resetUser['id']);
 
-    if ($password === $confirm) {
-        User::updatePassword($pdo, $user['id'], $password);
-        User::clearResetToken($pdo, $user['id']);
-        $_SESSION['success'] = 'Hasło zostało pomyślnie zresetowane!';
-        header('Location: login.php');
-        exit;
+            $_SESSION['success'] = 'Hasło zostało pomyślnie zresetowane!';
+            header('Location: login.php');
+            exit;
+        } else {
+            $error = 'Hasła nie są identyczne!';
+        }
     } else {
-        $error = 'Hasła nie są identyczne!';
+        $error = 'Token jest nieprawidłowy lub wygasł!';
     }
 }
 
@@ -45,7 +47,7 @@ include 'assets/header.php';
     <div class="message error"><?= htmlspecialchars($error) ?></div>
 <?php endif; ?>
 
-<?php if ($user): ?>
+<?php if ($resetUser): ?>
     <form method="post" style="max-width:400px; margin: 20px auto;">
         <label for="password">Nowe hasło</label>
         <input type="password" name="password" id="password" required>
@@ -55,6 +57,11 @@ include 'assets/header.php';
 
         <input type="submit" value="Zresetuj hasło">
     </form>
+<?php else: ?>
+    <div class="message error">Nieprawidłowy lub przedawniony token resetowania!</div>
+    <p style="text-align:center;">
+        <a href="forgot_password.php">Wygeneruj nowy link resetujący</a>
+    </p>
 <?php endif; ?>
 
 <?php include 'assets/footer.php'; ?>
