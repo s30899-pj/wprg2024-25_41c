@@ -20,23 +20,4 @@ class Comment
         $stmt = $pdo->query("SELECT COUNT(*) FROM comments");
         return (int)$stmt->fetchColumn();
     }
-
-    public static function add(\PDO $pdo, int $eventId, ?int $userId, ?string $guestName, string $content): bool
-    {
-        $stmt = $pdo->prepare("INSERT INTO comments (event_id, user_id, guest_name, content) 
-                           VALUES (:event_id, :user_id, :guest_name, :content)");
-
-        return $stmt->execute([
-            'event_id' => $eventId,
-            'user_id' => $userId,
-            'guest_name' => $guestName,
-            'content' => $content
-        ]);
-    }
-
-    public static function delete(\PDO $pdo, int $id): void
-    {
-        $stmt = $pdo->prepare("DELETE FROM comments WHERE id = :id");
-        $stmt->execute(['id' => $id]);
-    }
 }

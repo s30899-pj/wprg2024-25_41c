@@ -4,13 +4,11 @@ require_once '../src/db.php';
 require_once '../src/classes/Event.php';
 require_once '../src/classes/Comment.php';
 require_once '../src/classes/Registration.php';
-require_once '../src/classes/Attachment.php';
 require_once '../src/classes/User.php';
 
 use classes\Event;
 use classes\Comment;
 use classes\Registration;
-use classes\Attachment;
 use classes\User;
 
 session_start();
@@ -23,7 +21,6 @@ if (!$event) {
 }
 
 $comments = Comment::getByEventId($pdo, $id);
-$attachments = Attachment::getForEvent($pdo, $id);
 $isRegistered = isset($_SESSION['user']['id']) ? Registration::isRegistered($pdo, $_SESSION['user']['id'], $id) : false;
 
 $isOrganizerOrAdmin = false;
@@ -39,7 +36,7 @@ include 'assets/header.php';
 
     <div class="event-box">
         <?php if (!empty($event['image_path'])): ?>
-            <img src="../uploads/<?= htmlspecialchars($event['image_path']) ?>" alt="<?= htmlspecialchars($event['title']) ?>" class="event-image">
+            <img src="uploads/<?= htmlspecialchars($event['image_path']) ?>" alt="<?= htmlspecialchars($event['title']) ?>" class="event-image">
         <?php endif; ?>
 
         <p><?= nl2br(htmlspecialchars($event['description'] ?: 'Brak opisu')) ?></p>
@@ -61,24 +58,12 @@ include 'assets/header.php';
         <?php if ($event['is_closed']): ?>
             <p class="event-closed">Wydarzenie zakończone</p>
         <?php endif; ?>
-
-        <?php if (!empty($attachments)): ?>
-            <h3>Załączniki</h3>
-            <div class="attachments">
-                <?php foreach ($attachments as $attachment): ?>
-                    <div class="attachment">
-                        <span><?= htmlspecialchars(basename($attachment['file_path'])) ?></span>
-                        <a href="../uploads/<?= htmlspecialchars($attachment['file_path']) ?>" download>Pobierz</a>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-        <?php endif; ?>
     </div>
 
 <?php if (isset($_SESSION['user'])): ?>
     <div style="max-width: 600px; margin: 20px auto;">
         <?php if (!$event['is_closed']): ?>
-            <?php if (!$isRegistered): ?>
+            <?php if (!$isRegistered && $_SESSION['user']['role'] !== 'organizer' && $_SESSION['user']['role'] !== 'admin'): ?>
                 <?php if ($event['capacity'] <= 0 || Registration::countForEvent($pdo, $event['id']) < $event['capacity']): ?>
                     <form method="post" action="register_for_event.php">
                         <input type="hidden" name="event_id" value="<?= $event['id'] ?>">
@@ -87,7 +72,7 @@ include 'assets/header.php';
                 <?php else: ?>
                     <p class="message error">Brak wolnych miejsc na to wydarzenie.</p>
                 <?php endif; ?>
-            <?php else: ?>
+            <?php elseif (!$isRegistered && $_SESSION['user']['role'] !== 'organizer' && $_SESSION['user']['role'] !== 'admin'): ?>
                 <p class="message success">Jesteś zarejestrowany na to wydarzenie.</p>
             <?php endif; ?>
         <?php endif; ?>
@@ -135,39 +120,37 @@ include 'assets/header.php';
     <h3 style="text-align:center; margin-top: 30px;">Komentarze</h3>
 
 <?php
-function displayComments($comments, $parentId = null, $level = 0, $organizerId) {
+function displayComments($comments, $organizerId, $parentId = null, $level = 0) {
     foreach ($comments as $comment) {
         if ($comment['parent_id'] == $parentId) {
             $replyClass = $comment['is_organizer_reply'] ? 'organizer-reply' : '';
             ?>
-            <div class="comment <?= $replyClass ?>" style="margin-left: <?= $level * 30 ?>px;">
-                <div class="author">
-                    <?= htmlspecialchars($comment['guest_name'] ?? $comment['username'] ?? 'Anonim') ?>
-                    <?php if ($comment['is_organizer_reply']): ?>
-                        <span style="color: #28a745; font-weight: bold;">(Organizator)</span>
-                    <?php endif; ?>
+            <div class="comment-container <?= $replyClass ?>" style="margin-left: <?= $level * 25 ?>px;">
+                <div class="comment-header">
+                    <span class="comment-author">
+                        <?= htmlspecialchars($comment['guest_name'] ?? $comment['username'] ?? 'Anonim') ?>
+                        <?php if ($comment['is_organizer_reply']): ?>
+                            <span class="organizer-label">(Organizator)</span>
+                        <?php endif; ?>
+                    </span>
+                    <span class="comment-date"><?= date('d.m.Y H:i', strtotime($comment['created_at'])) ?></span>
                 </div>
-                <p><?= nl2br(htmlspecialchars($comment['content'])) ?></p>
-                <div class="date">
-                    <?= date('d.m.Y H:i', strtotime($comment['created_at'])) ?>
-                </div>
+                <div class="comment-content"><?= nl2br(htmlspecialchars($comment['content'])) ?></div>
 
                 <?php if (isset($_SESSION['user'])): ?>
                     <?php if ($_SESSION['user']['role'] === 'organizer' && $organizerId == $_SESSION['user']['id']): ?>
                         <button class="reply-button" data-comment-id="<?= $comment['id'] ?>">Odpowiedz</button>
 
-                        <form method="post" action="comment.php" class="reply-form" id="reply-form-<?= $comment['id'] ?>" style="display: none; margin-top: 10px;">
+                        <form method="post" action="comment.php" class="reply-form" id="reply-form-<?= $comment['id'] ?>">
                             <input type="hidden" name="event_id" value="<?= $_GET['id'] ?>">
                             <input type="hidden" name="parent_id" value="<?= $comment['id'] ?>">
-                            <textarea name="content" rows="2" required style="width: 100%; padding: 10px; font-size: 16px; border-radius: 6px; border: 1px solid #ccc;"></textarea>
-                            <input type="submit" value="Wyślij odpowiedź" style="margin-top: 10px; padding: 8px 15px; font-size: 14px; background: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer;">
+                            <textarea name="content" rows="2" required placeholder="Twoja odpowiedź..."></textarea>
+                            <input type="submit" value="Wyślij odpowiedź">
                         </form>
                     <?php endif; ?>
                 <?php endif; ?>
 
-                <?php
-                displayComments($comments, $comment['id'], $level + 1, $organizerId);
-                ?>
+                <?php displayComments($comments, $organizerId, $comment['id'], $level + 1); ?>
             </div>
             <?php
         }
@@ -177,7 +160,7 @@ function displayComments($comments, $parentId = null, $level = 0, $organizerId) 
 if (empty($comments)) {
     echo '<p style="text-align:center; color: #666;">Brak komentarzy do tego wydarzenia.</p>';
 } else {
-    displayComments($comments, null, 0, $event['organizer_id']);
+    displayComments($comments, $event['organizer_id'], null, 0,);
 }
 ?>
 
@@ -203,12 +186,6 @@ if (empty($comments)) {
     </script>
 
     <style>
-        .organizer-reply {
-            border-left: 3px solid #28a745;
-            padding-left: 10px;
-            background-color: #f8fff8;
-        }
-
         .reply-button {
             background: #6c757d;
             color: white;

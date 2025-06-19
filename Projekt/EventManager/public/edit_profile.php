@@ -24,22 +24,20 @@ $success = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $login = trim($_POST['login'] ?? '');
-    $email = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
     $confirm = $_POST['confirm_password'] ?? '';
 
-    if ($login && $email) {
-        $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE (login = ? OR email = ?) AND id != ?");
-        $stmt->execute([$login, $email, $userId]);
+    if ($login) {
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE login = ? AND id != ?");
+        $stmt->execute([$login, $userId]);
 
         if ($stmt->fetchColumn() > 0) {
             $errors[] = 'Login lub email już istnieje!';
         } else {
-            $stmt = $pdo->prepare("UPDATE users SET login = ?, email = ? WHERE id = ?");
-            $stmt->execute([$login, $email, $userId]);
+            $stmt = $pdo->prepare("UPDATE users SET login = ? WHERE id = ?");
+            $stmt->execute([$login, $userId]);
 
             $_SESSION['user']['login'] = $login;
-            $_SESSION['user']['email'] = $email;
 
             $success = 'Dane profilowe zostały zaktualizowane!';
         }
@@ -77,7 +75,7 @@ include 'assets/header.php';
         <input type="text" name="login" id="login" value="<?= htmlspecialchars($user['login']) ?>" required>
 
         <label for="email">Email</label>
-        <input type="email" name="email" id="email" value="<?= htmlspecialchars($user['email']) ?>" required>
+        <input type="email" name="email" id="email" value="<?= htmlspecialchars($user['email']) ?>" readonly style="background:#eee; cursor:not-allowed; color: #666">
 
         <h3 style="margin-top: 20px;">Zmiana hasła</h3>
         <p style="margin-bottom: 15px; color: #666;">Wypełnij tylko jeśli chcesz zmienić hasło</p>

@@ -10,7 +10,7 @@ session_start();
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $login = $_POST['login'] ?? '';
+    $login = trim($_POST['login']) ?? '';
     $password = $_POST['password'] ?? '';
 
     $user = User::findByLogin($pdo, $login);
@@ -33,8 +33,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 $stmt = $pdo->prepare("UPDATE users SET remember_token = ?, remember_token_expires = ? WHERE id = ?");
                 $stmt->execute([$rememberToken, date('Y-m-d H:i:s', $expiry), $user['id']]);
-
-                setcookie('remember', $rememberToken, $expiry, '/');
             }
 
             header('Location: index.php');

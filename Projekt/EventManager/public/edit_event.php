@@ -42,13 +42,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!empty($_FILES['image']['name'])) {
         $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
         if (in_array($_FILES['image']['type'], $allowedTypes) && $_FILES['image']['size'] <= 2 * 1024 * 1024) {
-            if ($imageName && file_exists("../uploads/$imageName")) {
-                unlink("../uploads/$imageName");
+            if ($imageName && file_exists("uploads/$imageName")) {
+                unlink("uploads/$imageName");
             }
 
             $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
             $imageName = uniqid() . '.' . $ext;
-            move_uploaded_file($_FILES['image']['tmp_name'], "../uploads/$imageName");
+            move_uploaded_file($_FILES['image']['tmp_name'], "uploads/$imageName");
         } else {
             $errors[] = 'Nieprawidłowy typ lub rozmiar pliku (max 2MB, jpg/png/gif).';
         }
@@ -84,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 include 'assets/header.php';
 ?>
 
-    <h2>Edytuj wydarzenie</h2>
+    <h2 class="page-title">Edytuj wydarzenie</h2>
 
 <?php if (!empty($errors)): ?>
     <ul class="errors">

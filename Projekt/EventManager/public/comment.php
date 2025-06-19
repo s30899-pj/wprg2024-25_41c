@@ -2,12 +2,8 @@
 require_once '../src/config.php';
 require_once '../src/db.php';
 require_once '../src/classes/Event.php';
-require_once '../src/classes/Comment.php';
-require_once '../src/classes/Auth.php';
 
 use classes\Event;
-use classes\Comment;
-use classes\Auth;
 
 session_start();
 

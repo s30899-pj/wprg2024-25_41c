@@ -18,7 +18,7 @@ $commentsCount = Comment::count($pdo);
 include 'assets/header.php';
 ?>
 
-    <h2 class="page-title" style="text-align: center; margin-bottom: 30px;">Statystyki systemu</h2>
+    <h2 class="page-title" style="text-align: center; margin-bottom: 30px;">Witaj</h2>
 
     <main class="container" style="max-width: 800px; margin: 0 auto;">
         <section style="

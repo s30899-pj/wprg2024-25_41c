@@ -4,7 +4,7 @@ define('DB_NAME', 'event_manager');
 define('DB_USER', 'root');
 define('DB_PASS', 'root');
 
-define('UPLOAD_DIR', __DIR__ . '/../uploads/');
+define('UPLOAD_DIR', __DIR__ . '/../public/uploads/');
 define('LOG_DIR', __DIR__ . '/../logs/');
 define('BASE_URL', 'http://localhost:8000/');
 

@@ -1,10 +1,16 @@
 <?php
+require_once '../src/config.php';
+require_once '../src/db.php';
 require_once '../src/classes/Auth.php';
+
 use classes\Auth;
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 Auth::checkRememberToken($pdo);
 
-if (session_status() === PHP_SESSION_NONE) session_start();
 $currentUser = $_SESSION['user'] ?? null;
 ?>
 <!DOCTYPE html>
@@ -18,7 +24,7 @@ $currentUser = $_SESSION['user'] ?? null;
 <body>
 <div class="page-wrapper">
     <header>
-        <h1><a href="index.php" style="color: white; text-decoration: none;">Event Manager</a></h1>
+        <h1><a href="index.php" style="color: white; text-decoration: none; pointer-events: none">Event Manager</a></h1>
         <nav>
             <ul>
                 <li><a href="index.php">Strona główna</a></li>

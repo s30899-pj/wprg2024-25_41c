@@ -4,24 +4,6 @@ namespace classes;
 
 class Auth
 {
-    public static function login(\PDO $pdo, string $login, string $password): bool
-    {
-        $stmt = $pdo->prepare("SELECT * FROM users WHERE login = :login");
-        $stmt->execute(['login' => $login]);
-        $user = $stmt->fetch(\PDO::FETCH_ASSOC);
-
-        if ($user && password_verify($password, $user['password'])) {
-            $_SESSION['user'] = [
-                'id' => $user['id'],
-                'login' => $user['login'],
-                'email' => $user['email'],
-                'role' => $user['role']
-            ];
-            return true;
-        }
-        return false;
-    }
-
     public static function checkRememberToken(\PDO $pdo): void
     {
         if (!isset($_SESSION['user']) && isset($_COOKIE['remember'])) {

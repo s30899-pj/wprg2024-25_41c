@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (in_array($_FILES['image']['type'], $allowedTypes) && $_FILES['image']['size'] <= 2 * 1024 * 1024) {
             $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
             $imageName = uniqid() . '.' . $ext;
-            move_uploaded_file($_FILES['image']['tmp_name'], "../uploads/$imageName");
+            move_uploaded_file($_FILES['image']['tmp_name'], "uploads/$imageName");
         } else {
             $errors[] = 'Nieprawidłowy typ lub rozmiar pliku (max 2MB, jpg/png/gif).';
         }
@@ -112,5 +112,11 @@ include 'assets/header.php';
 
         <input type="submit" value="Dodaj wydarzenie">
     </form>
+    <script>
+        document.getElementById('image').addEventListener('change', function () {
+            const fileName = this.files.length ? this.files[0].name : 'Nie wybrano pliku';
+            document.getElementById('file-name').textContent = fileName;
+        });
+    </script>
 
 <?php include 'assets/footer.php'; ?>

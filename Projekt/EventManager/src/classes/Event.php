@@ -70,23 +70,17 @@ class Event
         $stmt->execute(['id' => $id]);
     }
 
-    public static function getPastEvents(\PDO $pdo): array
-    {
-        $stmt = $pdo->prepare("SELECT * FROM events WHERE end_date < NOW() AND is_closed = 0");
-        $stmt->execute();
-        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
-    }
-
-    public static function close(\PDO $pdo, int $id): void
-    {
-        $stmt = $pdo->prepare("UPDATE events SET is_closed = 1 WHERE id = :id");
-        $stmt->execute(['id' => $id]);
-    }
-
     public static function getByOrganizer(\PDO $pdo, int $organizerId): array
     {
         $stmt = $pdo->prepare("SELECT * FROM events WHERE organizer_id = :organizer_id");
         $stmt->execute(['organizer_id' => $organizerId]);
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    public static function getRegistrationCount(\PDO $pdo, int $eventId): int
+    {
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM registrations WHERE event_id = :event_id");
+        $stmt->execute(['event_id' => $eventId]);
+        return (int)$stmt->fetchColumn();
     }
 }
